@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="msapplication-tap-highlight" content="no">
+  <title>customer-order</title>
+
+  <!-- Favicons-->
+  <link rel="icon" th:href="@{/images/favicon/favicon-32x32.png}" sizes="32x32">
+  <!-- Favicons-->
+  <link rel="apple-touch-icon-precomposed" th:href="@{/images/favicon/apple-touch-icon-152x152.png}">
+  <!-- For iPhone -->
+  <meta name="msapplication-TileColor" content="#00bcd4">
+  <meta name="msapplication-TileImage" th:content="@{/images/favicon/mstile-144x144.png}">
+  <!-- For Windows Phone -->
+
+
+  <!-- CORE CSS-->
+  <link th:href="@{/css/materialize.min.css}" type="text/css" rel="stylesheet" media="screen,projection">
+  <link th:href="@{/css/style.min.css}" type="text/css" rel="stylesheet" media="screen,projection">
+  <!-- Custome CSS-->    
+  <link href="@{/css/custom/custom.min.css}" type="text/css" rel="stylesheet" media="screen,projection">
+
+  <!-- INCLUDED PLUGIN CSS ON THIS PAGE -->
+  <link href="@{/js/plugins/perfect-scrollbar/perfect-scrollbar.css}" type="text/css" rel="stylesheet" media="screen,projection">
+  <link href="@{/js/plugins/data-tables/css/jquery.dataTables.min.css}" type="text/css" rel="stylesheet" media="screen,projection">
+  
+     <style type="text/css">
+  .input-field div.error{
+    position: relative;
+    top: -1rem;
+    left: 0rem;
+    font-size: 0.8rem;
+    color:#FF4081;
+    -webkit-transform: translateY(0%);
+    -ms-transform: translateY(0%);
+    -o-transform: translateY(0%);
+    transform: translateY(0%);
+  }
+  .input-field label.active{
+      width:100%;
+  }
+  .left-alert input[type=text] + label:after, 
+  .left-alert input[type=password] + label:after, 
+  .left-alert input[type=email] + label:after, 
+  .left-alert input[type=url] + label:after, 
+  .left-alert input[type=time] + label:after,
+  .left-alert input[type=date] + label:after, 
+  .left-alert input[type=datetime-local] + label:after, 
+  .left-alert input[type=tel] + label:after, 
+  .left-alert input[type=number] + label:after, 
+  .left-alert input[type=search] + label:after, 
+  .left-alert textarea.materialize-textarea + label:after{
+      left:0px;
+  }
+  .right-alert input[type=text] + label:after, 
+  .right-alert input[type=password] + label:after, 
+  .right-alert input[type=email] + label:after, 
+  .right-alert input[type=url] + label:after, 
+  .right-alert input[type=time] + label:after,
+  .right-alert input[type=date] + label:after, 
+  .right-alert input[type=datetime-local] + label:after, 
+  .right-alert input[type=tel] + label:after, 
+  .right-alert input[type=number] + label:after, 
+  .right-alert input[type=search] + label:after, 
+  .right-alert textarea.materialize-textarea + label:after{
+      right:70px;
+  }
+  </style> 
+</head>
+<body>
+<div id="loader-wrapper">
+      <div id="loader"></div>        
+      <div class="loader-section section-left"></div>
+      <div class="loader-section section-right"></div>
+  </div>
+  <header id="header" class="page-topbar">
+        <!-- start header nav-->
+        <div class="navbar-fixed">
+            <nav class="navbar-color">
+                <div class="nav-wrapper">
+                    <a class="cyan" th:href="@{/admin-page}" th:method="GET">|______MENU(add,view,update,delete)______|</a>
+                    <a class="cyan" th:href="@{/order}" th:method="GET">|______ORDERS(add,view,update,delete)______|</a>
+                    <a class="cyan" th:href="@{/user}" th:method="GET">|______USERS(add,view,update,delete)______|</a>
+                    <a class="cyan" th:href="@{/feedback}" th:method="GET">|______FEEDBACKS(view,delete)______|</a>
+                    <a class="cyan" th:href="@{/}" th:method="GET">|______LOG OUT______|</a>
+                    
+                    
+                </div>
+            </nav>
+        </div>
+        <!-- end header nav-->
+  </header>
+ 
+<div th:switch="${menus}">
+    <h2 th:case="null">No menu yet!</h2>
+        <div th:case="*">
+            <h2>Menus</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Food Name</th>
+                        <th>Price</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <tr th:each="menu : ${menus}">
+                    <td th:text="${menu.foodName}"></td>
+                    <td th:text="${menu.price}"></td>
+                    <td><a th:href="@{/delete/{id}(id=${menu.id})}">Delete</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>      
+
+</div>
+ <form action="#" th:action="@{/addmenu}" th:object="${menu}" method="post">
+    <label for="foodName">Food Name:</label>
+    <input type="text" th:field="*{foodName}" id="foodName" placeholder="foodName">
+    <span th:if="${#fields.hasErrors('foodName')}" th:errors="*{foodName}"></span>
+    <label for="price">Price:</label>
+    <input type="text" th:field="*{price}" id="price" placeholder="price">
+    <span th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></span>
+    <input type="submit" value="Add Menu">   
+</form>
+<form action="#" th:action="@{/update/{id}(id=${menu.id})}" th:object="${menu}" method="post">
+    <label for="foodName">Food Name:</label>
+    <input type="text" th:field="*{foodName}" id="foodName" placeholder="foodName">
+    <span th:if="${#fields.hasErrors('foodName')}" th:errors="*{foodName}"></span>
+    <label for="price">Price:</label>
+    <input type="text" th:field="*{price}" id="price" placeholder="price">
+    <span th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></span>
+    <input type="submit" value="Update Menu">   
+</form>
+  <!-- jQuery Library -->
+  <script type="text/javascript" th:src="@{/js/plugins/jquery-1.11.2.min.js}"></script>
+  <!--materialize js-->
+  <script type="text/javascript" th:src="@{/js/materialize.min.js}"></script>
+  <!--scrollbar-->
+  <script type="text/javascript" th:src="@{/js/plugins/perfect-scrollbar/perfect-scrollbar.min.js}"></script>
+
+      <!--plugins.js - Some Specific JS codes for Plugin Settings-->
+    <script type="text/javascript" th:src="@{/js/plugins.min.js}"></script>
+    <!--custom-script.js - Add your own theme custom JS-->
+    <script type="text/javascript" th:src="@{/js/custom-script.js}"></script>
+</body>
+</html>
